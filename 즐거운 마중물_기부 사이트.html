@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ADRF 함께하는 나눔 캠페인</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#0f0f12; --card:#14151b; --muted:#9aa1b2;
+    --brand:#ff5a66; --brand-2:#ff8a5c; --accent:#6ee7ff; --ring:rgba(255,90,102,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:'Pretendard',system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:#eaeef7; background:
+      radial-gradient(1200px 600px at 90% -10%, rgba(110,231,255,.08), transparent 60%),
+      radial-gradient(800px 500px at -10% 10%, rgba(255,138,92,.08), transparent 60%),
+      var(--bg);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px}
+
+  /* NAV */
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
+  .brand i{color:var(--brand)}
+  .badge{font-size:.78rem;background:#eaf7ff;color:#0b3340;padding:6px 10px;border-radius:999px}
+  .actions{display:flex;gap:10px}
+  .btn{
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg,#1a1c23,#14151b);
+    color:#fff;padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;font-weight:700
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .btn.primary{background:linear-gradient(90deg,var(--brand),var(--brand-2));border:none;box-shadow:0 6px 24px rgba(255,90,102,.35)}
+
+  /* HERO */
+  .hero{
+    position:relative;overflow:hidden;border-radius:20px;padding:42px;
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 30px 80px rgba(0,0,0,.35), inset 0 0 120px rgba(255,255,255,.04);
+    backdrop-filter: blur(8px);
+  }
+  .hero h1{font-size:clamp(28px,5vw,44px);margin:0 0 10px;font-weight:800;line-height:1.15}
+  .hero p{margin:0;color:var(--muted);font-size:clamp(14px,2.2vw,18px)}
+  .hero-cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+
+  .progress{margin-top:22px;background:#0e1016;border:1px solid rgba(255,255,255,.08);height:14px;border-radius:999px;overflow:hidden}
+  .progress>span{
+    display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--accent),#a7f3d0);
+    box-shadow:0 4px 16px rgba(110,231,255,.35) inset;
+    transition:width .6s ease;
+  }
+
+  .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+  .stat{background:#0e1016;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;text-align:center}
+  .stat b{display:block;font-size:1.15rem}
+  .stat small{color:var(--muted)}
+
+  /* SECTION */
+  .section{margin-top:42px}
+  .section h2{margin:0 0 16px;font-size:1.6rem}
+
+  /* GALLERY */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .card{overflow:hidden;border-radius:18px;background:#0e1016;border:1px solid rgba(255,255,255,.08);position:relative}
+  .card img{width:100%;height:320px;object-fit:cover;display:block}
+  .tag{
+    position:absolute;left:12px;top:12px;background:rgba(0,0,0,.55);
+    color:#fff;padding:6px 10px;border-radius:999px;font-weight:700;border:1px solid rgba(255,255,255,.16)
+  }
+  .caption{padding:12px 14px;color:#cbd5e1;font-size:.95rem}
+
+  /* DONOR LIST */
+  .donor-list{margin-top:40px;background:#0e1016;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px}
+  .donor-list h3{margin:0 0 14px;font-size:1.2rem}
+  .donor-list ul{list-style:none;padding:0;margin:0}
+  .donor-list li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .donor-list li:last-child{border-bottom:none}
+
+  /* MODAL */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:50;padding:16px}
+  .modal{width:min(560px,96vw);background:#0f1117;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px;box-shadow:0 30px 100px rgba(0,0,0,.5)}
+  .modal h3{margin:0 0 10px}
+  .form{display:grid;gap:12px;margin-top:6px}
+  label{font-weight:700}
+  input[type="text"], input[type="number"]{
+    width:100%;padding:14px 16px;border-radius:12px;background:#0b0d12;color:#e7ecf8;border:1.5px solid rgba(255,255,255,.14);outline:0;transition:.18s
+  }
+  input:focus{border-color:var(--ring);box-shadow:0 0 0 6px rgba(255,90,102,.12)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .x{background:transparent;border:1px solid rgba(255,255,255,.2);padding:10px 14px;border-radius:12px;color:#fff;cursor:pointer}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+  .bank{margin-top:10px;background:#0b0d12;border:1px dashed rgba(255,255,255,.18);padding:14px;border-radius:12px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#0b0d12;border:1px solid rgba(255,255,255,.14);font-size:.9rem;color:#cfe7ff}
+  .muted{color:#9aa1b2}
+  .sep{height:1px;background:rgba(255,255,255,.08);margin:14px 0}
+
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#donate" style="position:absolute;left:-9999px;">바로 기부 폼으로 이동</a>
+
+<header class="wrap nav" aria-label="상단 탐색">
+  <div class="brand">
+    <i class="fa-solid fa-hand-holding-heart"></i>
+    <span>ADRF 나눔 캠페인</span>
+    <span class="badge" aria-label="투명성 배지"><i class="fa-solid fa-shield-halved"></i> 투명 공개</span>
+  </div>
+  <div class="actions">
+    <a href="#impact" class="btn">임팩트</a>
+    <a href="#gallery" class="btn">지원 국가</a>
+    <button class="btn primary" id="openDonate">기부하기</button>
+  </div>
+</header>
+
+<!-- 스킵 링크 목적지 -->
+<div id="donate" class="wrap" style="position:relative;height:1px;overflow:hidden"></div>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle">여러분의 오늘이,<br/>누군가의 내일을 비춥니다.</h1>
+    <p>여러분의 후원은 인도네시아와 몽골의 아이들에게 더 많은 책과 배움의 기회를 전합니다.</p>
+
+    <div class="hero-cta">
+      <button class="btn primary" id="openDonate2"><i class="fa-solid fa-heart"></i> 지금 기부하기</button>
+    </div>
+
+    <div class="progress" aria-label="모금 진행률" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+      <span id="progressBar"></span>
+    </div>
+    <div class="stats" id="impact">
+      <div class="stat"><b id="raised">0원</b><small>현재 모금액</small></div>
+      <div class="stat"><b>2개국</b><small>인도네시아 · 몽골</small></div>
+    </div>
+  </section>
+
+  <!-- 지원 국가 섹션 -->
+  <section class="section" id="gallery" aria-labelledby="gTitle">
+    <h2 id="gTitle">지원 국가 (인도네시아, 몽골)</h2>
+    <div class="grid">
+      <figure class="card">
+        <img src="https://i.ibb.co/k6QDhD5S/image.jpg" alt="인도네시아에서 책을 읽는 아이" />
+        <span class="tag">인도네시아</span>
+        <figcaption class="caption">책 속에서 만난 세상은, 아이들의 꿈을 자라게 합니다.</figcaption>
+      </figure>
+      <figure class="card">
+        <img src="https://i.ibb.co/Lhdv4FcW/image.jpg" alt="몽골에서 활동하며 웃고 있는 아이들" />
+        <span class="tag">몽골</span>
+        <figcaption class="caption">웃음과 배움이 함께하는 순간, 미래가 자랍니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 기부자 명단 -->
+  <section class="donor-list" aria-labelledby="donorTitle">
+    <h3 id="donorTitle">기부자 명단</h3>
+    <ul id="donorList"></ul>
+  </section>
+
+  <!-- 문의 -->
+  <section class="contact">
+    <h3>문의</h3>
+    <p>📧 이메일: <a href="mailto:yeojin071115@naver.com">yeojin071115@naver.com</a></p>
+    <p>📷 인스타그램: <a href="https://instagram.com/duwls._hy" target="_blank" rel="noopener noreferrer">@duwls._hy</a></p>
+  </section>
+</main>
+
+<!-- 2-STEP MODAL -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" role="document">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h3 id="modalTitle">기부하기</h3>
+      <button class="x" id="close">닫기</button>
+    </div>
+
+    <!-- STEP 1 -->
+    <section id="stepForm" aria-label="기부 정보 입력">
+      <p class="muted" style="margin-top:0">이름, 금액, 한마디를 입력해 주세요.</p>
+      <form id="donationForm" class="form" novalidate>
+        <div class="row">
+          <div>
+            <label for="name">이름</label>
+            <input id="name" name="name" type="text" placeholder="이름" required autocomplete="off" />
+          </div>
+          <div>
+            <label for="amount">금액(원)</label>
+            <input id="amount" name="amount" type="number" min="1000" step="100" placeholder="예: 10000" required />
+          </div>
+        </div>
+        <div>
+          <label for="message">한마디(선택)</label>
+          <input id="message" name="message" type="text" placeholder="응원의 메시지를 남겨주세요" />
+        </div>
+        <div class="btns">
+          <button type="submit" class="btn primary" aria-label="다음 단계로">다음으로</button>
+          <button type="button" class="btn" id="cancel1">취소</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="stepConfirm" aria-label="송금 안내" style="display:none">
+      <div class="pill"><i class="fa-solid fa-circle-check"></i> 정보 확인 완료</div>
+      <div class="sep"></div>
+      <div class="bank" aria-live="polite"></div>
+      <p class="muted" style="margin-top:12px">입금이 확인되면 명단에 자동 반영됩니다. 문제가 있으면 언제든 문의해 주세요.</p>
+      <div style="margin-top:14px; padding:12px; background:#0b0d12; border-radius:10px; border:1px solid rgba(255,255,255,.14); font-size:0.9rem;">
+        <p style="margin:0 0 6px;"><strong>📮 문의하기</strong></p>
+        <p style="margin:4px 0;"><i class="fa-solid fa-envelope"></i> <a href="mailto:yeojin071115@naver.com">yeojin071115@naver.com</a></p>
+        <p style="margin:4px 0;"><i class="fa-brands fa-instagram"></i> <a href="https://instagram.com/duwls._hy" target="_blank" rel="noopener noreferrer">@duwls._hy</a></p>
+      </div>
+      <div class="btns" style="margin-top:10px"><button class="btn" id="close2">닫기</button></div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ===== 모금액: 0 → 524,000원, 8/10~9/10 선형 증가 ===== */
+(function(){
+  const TARGET_AMOUNT = 524000;
+  const START_ISO = "2025-08-10T00:00:00+09:00";   // 시작
+  const END_ISO   = "2025-09-10T23:59:59+09:00";   // 종료
+
+  const startDate = new Date(START_ISO);
+  const endDate = new Date(END_ISO);
+  const durationMs = Math.max(endDate - startDate, 1);
+
+  const raisedEl = document.getElementById("raised");
+  const progressBar = document.getElementById("progressBar");
+
+  function clamp(v, min, max){ return Math.min(Math.max(v, min), max); }
+  function formatKRW(n){ return n.toLocaleString("ko-KR") + "원"; }
+
+  function getCurrentAmount(now){
+    const elapsed = clamp(now - startDate, 0, durationMs);
+    const ratio = elapsed / durationMs;
+    return Math.round(TARGET_AMOUNT * ratio);
+  }
+
+  function render(){
+    const now = new Date();
+    const amt = getCurrentAmount(now);
+    raisedEl.textContent = formatKRW(amt);
+    const pct = (amt / TARGET_AMOUNT) * 100;
+    progressBar.style.width = pct + "%";
+    progressBar.setAttribute("aria-valuenow", Math.round(pct));
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+
+/* ===== 모달 열기/닫기 & 폼 처리 ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('overlay');
+  const openDonate = document.getElementById('openDonate');
+  const openDonate2 = document.getElementById('openDonate2');
+  const closeBtn = document.getElementById('close');
+  const closeBtn2 = document.getElementById('close2');
+  const cancel1 = document.getElementById('cancel1');
+  const stepForm = document.getElementById('stepForm');
+  const stepConfirm = document.getElementById('stepConfirm');
+  const donationForm = document.getElementById('donationForm');
+  const donorList = document.getElementById('donorList');
+  const nameInput = document.getElementById('name');
+  const amountInput = document.getElementById('amount');
+
+  let lastFocused;
+
+  function openModal() {
+    lastFocused = document.activeElement;
+    overlay.style.display = 'grid';
+    stepForm.style.display = 'block';
+    stepConfirm.style.display = 'none';
+    donationForm.reset();
+    setTimeout(() => nameInput.focus(), 0);
+  }
+  function closeModal() {
+    overlay.style.display = 'none';
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  }
+
+  openDonate?.addEventListener('click', openModal);
+  openDonate2?.addEventListener('click', openModal);
+  closeBtn?.addEventListener('click', closeModal);
+  closeBtn2?.addEventListener('click', closeModal);
+  cancel1?.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.style.display === 'grid') closeModal();
+  });
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  // 폼 제출 → Step 2 전환 + 리스트/안내 갱신
+  donationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = donationForm.name.value.trim();
+    const amount = parseInt(donationForm.amount.value, 10);
+    const message = donationForm.message.value.trim();
+
+    if (!name) { nameInput.focus(); return; }
+    if (!Number.isFinite(amount) || amount < 1000) { amountInput.focus(); return; }
+
+    // 명단 맨 위에 추가 (XSS 방지)
+    const li = document.createElement('li');
+    li.innerHTML =
+      `<strong>${escapeHTML(name)}</strong> — ${amount.toLocaleString()}원` +
+      (message ? ` <em>(${escapeHTML(message)})</em>` : '');
+    donorList.prepend(li);
+
+    // 2단계로 전환
+    stepForm.style.display = 'none';
+    stepConfirm.style.display = 'block';
+
+    // 송금 안내
+    const bankBox = stepConfirm.querySelector('.bank');
+    bankBox.innerHTML = `
+      <p><strong>송금 계좌</strong></p>
+      <p>은행명: 기업은행</p>
+      <p>계좌번호: 000-5032-4897</p>
+      <p>예금주: 조순옥</p>
+      <p class="muted">입금자명은 <strong>${escapeHTML(name)}</strong>(으)로 송금해주세요. 감사합니다.</p>
+    `;
+  });
+
+  // XSS 방지용 이스케이프
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, (m) => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+});
+</script>
+</body>
+</html>
